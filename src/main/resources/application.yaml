@@ -3,18 +3,18 @@ spring:
     name: baseline.api
 
   datasource:
-    url: ${DB_URL} # Replace with your PostgreSQL URL
-    username: ${DB_USER} # Replace with your PostgreSQL username
-    password: ${DB_PASSWORD} # Replace with your PostgreSQL password
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   flyway:
-    enabled: true # Enable Flyway
-    url: ${DB_URL} # Flyway uses the same URL as your datasource
-    user: ${DB_USER} # Flyway uses the same username as your datasource
-    password: ${DB_PASSWORD} # Flyway uses the same password as your datasource
-    locations: classpath:db/migration # Location of your Flyway migration scripts
-    baseline-on-migrate: true # Optional: Set to true to baseline an existing database
+    enabled: true
+    url: ${DB_URL}
+    user: ${DB_USER}
+    password: ${DB_PASSWORD}
+    locations: classpath:db/migration
+    baseline-on-migrate: true
   jpa:
     generate-ddl: false
     show-sql: false
