@@ -7,7 +7,7 @@ on:
 env:
   AWS_REGION: af-south-1
   ECR_REPOSITORY: dev-ecr-repo
-  CLUSTER_NAME: dev
+  CLUSTER_NAME: dev-env-cluster
 
 permissions:
   id-token: write
