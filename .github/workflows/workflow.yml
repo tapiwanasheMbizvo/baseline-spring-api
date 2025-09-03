@@ -8,6 +8,9 @@ env:
   AWS_REGION: af-south-1               # update if needed
   ECR_REPOSITORY: dev-ecr-repo          # your ECR repo name
 
+permissions:
+  id-token: write   # This is required for requesting the JWT
+  contents: read
 jobs:
   build:
     runs-on: ubuntu-latest
