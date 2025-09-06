@@ -6,7 +6,7 @@ on:
 
 env:
   AWS_REGION: af-south-1
-  ECR_REPOSITORY: dev-ecr-repo
+  ECR_REPOSITORY: base-line-api
   CLUSTER_NAME: dev-env-cluster
 
 permissions:
