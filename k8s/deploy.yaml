@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: baseline-api
-          image: ${ECR_REGISTRY}/dbase-line-api:latest
+          image: ${ECR_REGISTRY}:latest
           ports:
             - containerPort: 8080
           envFrom:
