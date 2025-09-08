@@ -6,6 +6,7 @@ import com.tapiwanashe.mbizvo.baseline.api.services.impl.IconCharactersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -27,6 +28,7 @@ public class IconicCharactersController {
     public ApiResponse<?> findById(@PathVariable Long id) {
         return ApiResponse.builder()
                 .data(iconCharactersService.findById(id))
+                .timestamp(LocalDateTime.now())
                 .build();
     }
 
@@ -36,6 +38,7 @@ public class IconicCharactersController {
         return
                 ApiResponse.builder()
                         .data(iconCharactersService.create(iconicCharacter))
+                        .timestamp(LocalDateTime.now())
                         .build();
     }
 }
