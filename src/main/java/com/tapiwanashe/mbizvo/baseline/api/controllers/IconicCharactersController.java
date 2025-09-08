@@ -4,11 +4,12 @@ import com.tapiwanashe.mbizvo.baseline.api.dto.ApiResponse;
 import com.tapiwanashe.mbizvo.baseline.api.entity.IconicCharacter;
 import com.tapiwanashe.mbizvo.baseline.api.services.impl.IconCharactersService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/characters")
 @RequiredArgsConstructor
@@ -19,8 +20,13 @@ public class IconicCharactersController {
     @GetMapping
     public ApiResponse<?> findAll() {
 
+        log.atInfo()
+                .setMessage("findAll started")
+                .log();
         return ApiResponse.builder()
                 .data(iconCharactersService.findAll())
+                .timestamp(LocalDateTime.now())
+                .message("characters")
                 .build();
     }
 
