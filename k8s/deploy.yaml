@@ -28,3 +28,7 @@ spec:
           volumeMounts:
             - mountPath: /logs
               name: efs-volume
+      volumes:
+        - name: efs-volume
+          persistentVolumeClaim:
+            claimName: efs-pvc
