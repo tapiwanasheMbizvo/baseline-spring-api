@@ -25,3 +25,6 @@ spec:
             httpGet:
               port: 8080
               path: /api/v1/actuator/health
+          volumeMounts:
+            - mountPath: /logs
+              name: efs-volume
