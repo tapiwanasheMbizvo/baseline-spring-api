@@ -28,6 +28,18 @@ spec:
           volumeMounts:
             - mountPath: /logs
               name: efs-volume
+
+        - name: s2-shipper-side-car
+          image: amazon/aws-cli
+          command:
+            - sh
+            - -c
+            - |
+              while true; do
+               aws s3 cp /logs s3://eks-k8s-cluser-pod-logs098878681/logs/${POD_NAMESPACE}/${POD_NAME}/ --recursive --quiet || true
+                sleep 60
+              done
+
       volumes:
         - name: efs-volume
           persistentVolumeClaim:
