@@ -20,7 +20,7 @@ public class HelloWorld {
         return  ApiResponse.<String>builder()
                 .data("hello world from api")
                 .status(HttpStatus.ACCEPTED)
-                .message("hello world from api in eks")
+                .message("hello world from api running  in ecs")
                 .timestamp(LocalDateTime.now())
                 .build();
     }
