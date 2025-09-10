@@ -1,12 +1,12 @@
-name: Build, Push & Deploy to EKS
+name: Build jar, Create docker image and push to ECR.
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "split-build-and-deploy" ]
 
 env:
   AWS_REGION: af-south-1
-  ECR_REPOSITORY: base-line-api
+  ECR_REPOSITORY: baseline-api
   CLUSTER_NAME: dev-env-cluster
 
 permissions:
@@ -58,33 +58,3 @@ jobs:
           docker push $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:latest
 
           echo "Image pushed: $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG"
-
-      - name: Install kubectl
-        run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-          chmod +x kubectl
-          sudo mv kubectl /usr/local/bin/
-
-      - name: Update kubeconfig for EKS
-        run: |
-          aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.CLUSTER_NAME }}
-
-      - name: Create/Update DB Secret
-        run: |
-          kubectl create secret generic db-credentials \
-            --from-literal=DB_URL=${{ secrets.DB_URL }} \
-            --from-literal=ECR_REGISTRY=${{ secrets.ECR_REGISTRY }} \
-            --from-literal=DB_USER=${{ secrets.DB_USER }} \
-            --from-literal=DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-            --namespace=dev \
-            --dry-run=client -o yaml | kubectl apply -f -
-
-      - name: Apply Kubernetes manifests
-        run: |
-           export ECR_REGISTRY=${{ secrets.ECR_REGISTRY }}
-           envsubst < k8s/deploy.yaml | kubectl apply -f -
-
-
-      - name: Apply Kubernetes manifests
-        run: |
-          kubectl apply -f k8s/

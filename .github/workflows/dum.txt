@@ -1,0 +1,18 @@
+      # app-repo/.github/workflows/build.yml  (append to your existing job after image push)
+      - name: Persist image tag for later steps
+        run: |
+          COMMIT_HASH=${GITHUB_SHA::7}
+          IMAGE_TAG=$COMMIT_HASH
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+          echo "ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}" >> $GITHUB_ENV
+
+      - name: Notify GitOps repo (repository_dispatch)
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          # a PAT (repo scope) for the GitOps repo which the action will use to call the dispatch API
+          token: ${{ secrets.GITOPS_REPO_TOKEN }}
+          repository: https://github.com/tapiwanasheMbizvo/baseline-api-k8s-app.git
+          event-type: update-dev
+          # client_payload must be JSON. Use env values we set above.
+          client-payload: |
+            {"image_tag":"${{ env.IMAGE_TAG }}","registry":"${{ env.ECR_REGISTRY }}","repository":"${{ env.ECR_REPOSITORY }}"}
