@@ -34,3 +34,4 @@ build/
 
 .env
 /logs/*
+/k8s/keys/*

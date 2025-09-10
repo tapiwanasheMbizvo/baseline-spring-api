@@ -20,27 +20,37 @@ spec:
             - containerPort: 8080
           envFrom:
             - secretRef:
-                name: db-credentials
+                name: springboot-creds
           readinessProbe:
             httpGet:
               port: 8080
               path: /api/v1/actuator/health
-          volumeMounts:
-            - mountPath: /logs
-              name: efs-volume
 
-        - name: s2-shipper-side-car
-          image: amazon/aws-cli
-          command:
-            - sh
-            - -c
+          volumeMounts:
+            - name: logs-volume
+              mountPath: logs
+
+        - name: log-shipper
+          image: amazon/aws-cli:2.28.26
+          command: [ "/bin/sh", "-c" ]
+          args:
             - |
               while true; do
-               aws s3 cp /logs s3://eks-k8s-cluser-pod-logs098878681/logs/${POD_NAMESPACE}/${POD_NAME}/ --recursive --quiet || true
-                sleep 60
+                for file in /logs/*.json; do
+                  [ -e "$file" ] || continue
+                  aws s3 cp "$file" s3://eks-k8s-cluser-pod-logs098878681/logs/
+                done
+                sleep 30
               done
 
+          envFrom:
+            - secretRef:
+                name: aws-creds
+          volumeMounts:
+            - name: logs-volume
+              mountPath: /logs
+
+
       volumes:
-        - name: efs-volume
-          persistentVolumeClaim:
-            claimName: efs-pvc
+        - name: logs-volume
+          emptyDir: {}
