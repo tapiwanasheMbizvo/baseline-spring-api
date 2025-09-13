@@ -16,8 +16,8 @@ services:
 
 networks:
   elk_net:
-    external:
       name: articles-aop-and-logstash_elk_net
+      external: true
 
 volumes:
   app-logs:
