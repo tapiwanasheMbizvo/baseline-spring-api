@@ -3,7 +3,6 @@ package com.tapiwanashe.mbizvo.baseline.api.services.impl;
 import com.tapiwanashe.mbizvo.baseline.api.entity.IconicCharacter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

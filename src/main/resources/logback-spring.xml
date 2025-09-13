@@ -1,31 +1,48 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <!-- Define the JSON file appender -->
-    <appender name="JSON_FILE" class="ch.qos.logback.core.FileAppender">
-        <file>logs/baseline-api-logs.json</file> <!-- Path to the log file -->
-        <append>true</append> <!-- Append to the existing file -->
+    <!-- Log file location -->
+    <property name="LOG_DIR" value="/app/logs"/>
+    <property name="LOG_FILE" value="${LOG_DIR}/api.logs.json"/>
+
+    <!-- JSON encoder -->
+    <appender name="JSON_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
-                <timestamp />
-                <loggerName />
-                <threadName />
-                <level />
-                <message />
-                <arguments />
-                <stackTrace />
-                <MDC />
+                <timestamp>
+                    <timeZone>UTC</timeZone>
+                </timestamp>
+                <pattern>
+                    <pattern>
+                        {
+                        "level": "%level",
+                        "logger": "%logger",
+                        "thread": "%thread",
+                        "message": "%message",
+                        "requestId": "%X{requestId}",
+                        "userId": "%X{userId}",
+                        "exception": "%exception{10}"
+                        }
+                    </pattern>
+                </pattern>
             </providers>
         </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/api-%d{yyyy-MM-dd}.json</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
     </appender>
 
+    <!-- Console for local dev -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger - %msg%n</pattern>
         </encoder>
     </appender>
 
+    <!-- Root logger -->
     <root level="INFO">
-        <appender-ref ref="JSON_FILE" />
-        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="JSON_FILE"/>
+        <appender-ref ref="CONSOLE"/>
     </root>
 </configuration>

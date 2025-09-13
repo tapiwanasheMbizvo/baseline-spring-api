@@ -20,8 +20,6 @@ public class IconicCharactersController {
 
     @GetMapping
     public ApiResponse<?> findAll() {
-
-        log.atInfo().setMessage("finding all the characters").log();
         return ApiResponse.builder()
                 .data(iconCharactersService.findAll())
                 .timestamp(LocalDateTime.now())
@@ -32,7 +30,6 @@ public class IconicCharactersController {
 
     @GetMapping("/{id}")
     public ApiResponse<?> findById(@PathVariable Long id) {
-        log.atInfo().setMessage("finding character by id: " + id).log();
         return ApiResponse.builder()
                 .data(iconCharactersService.findById(id))
                 .timestamp(LocalDateTime.now())
@@ -42,7 +39,6 @@ public class IconicCharactersController {
 
     @PostMapping
     public ApiResponse<?> save(@RequestBody IconicCharacter iconicCharacter) {
-
         return
                 ApiResponse.builder()
                         .data(iconCharactersService.create(iconicCharacter))
