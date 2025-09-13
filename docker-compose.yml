@@ -10,6 +10,11 @@ services:
       - "8080:8080"
     restart: always
     networks:
-      - articles-aop-and-logstash_elk_net
+      - elk_net
     volumes:
       - ./logs:/app/logs
+
+networks:
+  elk_net:
+    external:
+      name: articles-aop-and-logstash_elk_net
