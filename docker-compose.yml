@@ -12,9 +12,14 @@ services:
     networks:
       - elk_net
     volumes:
-      - ./logs:/app/logs
+      - app-logs:/app/logs
 
 networks:
   elk_net:
     external:
       name: articles-aop-and-logstash_elk_net
+
+volumes:
+  app-logs:
+    driver: local
+
