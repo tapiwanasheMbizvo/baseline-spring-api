@@ -69,7 +69,7 @@ services:
   filebeat:
     image: docker.elastic.co/beats/filebeat:8.15.0
     container_name: filebeat
-    user: developer   # required to read mounted config/log files
+    user: root   # required to read mounted config/log files
     volumes:
       - ./filebeat.yml:/usr/share/filebeat/filebeat.yml
       - app_logs:/app-logs

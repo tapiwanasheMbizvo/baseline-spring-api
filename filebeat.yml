@@ -9,3 +9,5 @@ filebeat.inputs:
 output.elasticsearch:
   hosts: ["http://elasticsearch:9200"]
   index: "api-logs-%{+yyyy.MM.dd}"
+setup.template.name: "api-logs"
+setup.template.pattern: "api-logs-*"
