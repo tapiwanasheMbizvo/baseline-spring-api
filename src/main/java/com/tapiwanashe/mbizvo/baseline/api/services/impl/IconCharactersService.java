@@ -1,8 +1,9 @@
 package com.tapiwanashe.mbizvo.baseline.api.services.impl;
 
 import com.tapiwanashe.mbizvo.baseline.api.entity.IconicCharacter;
+import com.tapiwanashe.mbizvo.baseline.api.exceptions.EmailAlreadyTakenException;
+import com.tapiwanashe.mbizvo.baseline.api.repositories.IconCharacterRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,11 +12,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class IconCharactersService {
 
-    private final JpaRepository<IconicCharacter, Long> crudRepository;
+    private final IconCharacterRepository crudRepository;
 
 
     public IconicCharacter create(IconicCharacter character) {
 
+        if (crudRepository.findByEmail(character.getEmail()).isPresent()) {
+
+            throw  new EmailAlreadyTakenException("Email already exists");
+        }
         return crudRepository.save(character);
     }
 
