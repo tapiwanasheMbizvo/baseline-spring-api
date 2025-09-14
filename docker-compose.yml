@@ -1,25 +1,90 @@
+#services:
+#  spring-app:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    container_name: spring-app
+#    env_file:
+#      - /home/developer/dev/env/localdb.env
+#    ports:
+#      - "8080:8080"
+#    restart: always
+#    networks:
+#      - elk_net
+#    volumes:
+#      - app-logs:/app/logs
+#
+#networks:
+#  elk_net:
+#      name: articles-aop-and-logstash_elk_net
+#      external: true
+#
+#volumes:
+#  app-logs:
+#    driver: local
+
+
+
 services:
-  spring-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: spring-app
+  springboot-app:
+    build: .
+    container_name: springboot-app
     env_file:
       - /home/developer/dev/env/localdb.env
     ports:
-      - "8080:8080"
-    restart: always
+      - "8082:8080"
+    volumes:
+      - app_logs:/app/logs   # app writes logs to a named volume
     networks:
       - elk_net
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
+    container_name: elasticsearch
+    env_file:
+      - /home/developer/dev/env/elastic.env
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     volumes:
-      - app-logs:/app/logs
+      - es_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - elk_net
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.12.0
+    container_name: kibana
+    env_file:
+      - /home/developer/dev/env/kibana.env
+    ports:
+      - "5601:5601"
+    networks:
+      - elk_net
+    depends_on:
+      - elasticsearch
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.15.0
+    container_name: filebeat
+    user: developer   # required to read mounted config/log files
+    volumes:
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - app_logs:/app-logs
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk_net
 
 networks:
   elk_net:
-      name: articles-aop-and-logstash_elk_net
-      external: true
+    driver: bridge
 
 volumes:
-  app-logs:
-    driver: local
+  es_data:
+  app_logs:
+
+
 
