@@ -14,7 +14,7 @@ public class MessageController {
     }
 
     @PostMapping("/send")
-    public String sendMessage(@RequestParam ISOMessage msg) {
+    public String sendMessage(@RequestBody ISOMessage msg) {
         messageProducer.sendMessage(msg);
         return "Message sent: " + msg;
     }
