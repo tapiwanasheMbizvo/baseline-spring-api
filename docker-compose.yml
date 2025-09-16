@@ -35,6 +35,8 @@ services:
       - "15672:15672" # RabbitMQ management UI
     env_file:
       - /home/developer/dev/env/rabbitmq.env
+    networks:
+      - elk_net
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.12.0
