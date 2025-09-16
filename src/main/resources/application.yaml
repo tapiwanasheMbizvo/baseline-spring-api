@@ -1,6 +1,11 @@
 spring:
   application:
     name: baseline.api
+  rabbitmq:
+    host: ${RABBIT_HOST}
+    port: 5672
+    username: ${RABBIT_USER}
+    password: ${RABBIT_PASSWORD}
 
   datasource:
     url: ${DB_URL}
