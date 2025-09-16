@@ -1,13 +1,12 @@
 package com.tapiwanashe.mbizvo.baseline.api.dto;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.ToString;
 
 import java.io.Serializable;
 
 @Data
-@Builder
-
+@ToString
 public class ISOMessage implements Serializable {
 
     public ISOMessage() {}
