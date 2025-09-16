@@ -1,4 +1,5 @@
 package com.tapiwanashe.mbizvo.baseline.api.controllers;
+import com.tapiwanashe.mbizvo.baseline.api.dto.ApiResponse;
 import com.tapiwanashe.mbizvo.baseline.api.dto.ISOMessage;
 import com.tapiwanashe.mbizvo.baseline.api.services.impl.MessageProducer;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +15,11 @@ public class MessageController {
     }
 
     @PostMapping("/send")
-    public String sendMessage(@RequestBody ISOMessage msg) {
+    public ApiResponse<?> sendMessage(@RequestBody ISOMessage msg) {
         messageProducer.sendMessage(msg);
-        return "Message sent: " + msg;
+
+        return  ApiResponse.builder()
+                .message(msg.toString())
+                .build();
     }
 }

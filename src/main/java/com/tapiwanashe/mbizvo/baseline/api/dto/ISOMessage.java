@@ -7,7 +7,10 @@ import java.io.Serializable;
 
 @Data
 @Builder
+
 public class ISOMessage implements Serializable {
+
+    public ISOMessage() {}
 
     private static final long serialVersionUID = 1L;
     private String messageHeader;
