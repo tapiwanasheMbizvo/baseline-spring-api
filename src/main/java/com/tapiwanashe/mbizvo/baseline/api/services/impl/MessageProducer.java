@@ -11,12 +11,8 @@ import org.springframework.stereotype.Service;
 public class MessageProducer {
 
     private final RabbitTemplate rabbitTemplate;
-    private final  IsoMessageService messageService;
-
-
-
     public void sendMessage(ISOMessage message) {
         rabbitTemplate.convertAndSend(RabbitConfig.QUEUE_NAME, message);
-        messageService.createMessage(message);
+
     }
 }

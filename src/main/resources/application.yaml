@@ -1,31 +1,14 @@
 spring:
   application:
-    name: baseline.api
-  rabbitmq:
-    host: ${RABBIT_HOST}
-    port: 5672
-    username: ${RABBIT_USER}
-    password: ${RABBIT_PASSWORD}
+    name: baseline-api
+  profiles:
+    active: local-baseline
+  config:
+    import: "optional:configserver:http://10.0.0.191:5671"
 
-  datasource:
-    url: ${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
-    driver-class-name: org.postgresql.Driver
-
-  flyway:
-    enabled: true
-    url: ${DB_URL}
-    user: ${DB_USER}
-    password: ${DB_PASSWORD}
-    locations: classpath:db/migration
-    baseline-on-migrate: true
-  jpa:
-    generate-ddl: false
-    show-sql: false
-    hibernate:
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  cloud:
+    config:
+      name: local
 
 server:
   servlet:

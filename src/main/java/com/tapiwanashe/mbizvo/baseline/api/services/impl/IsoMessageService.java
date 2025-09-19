@@ -6,6 +6,8 @@ import com.tapiwanashe.mbizvo.baseline.api.repositories.IsoMessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class IsoMessageService {
@@ -16,7 +18,7 @@ public class IsoMessageService {
 
         var isoMessageEntity = new IsoMessage();
         isoMessageEntity.setMessageHeader(isoMessage.getMessageHeader());
-        isoMessageEntity.setMessageBody(isoMessage.getMessageBody());
+        isoMessageEntity.setMessageBody(UUID.randomUUID().toString());
         return  isoMessageRepository.save(isoMessageEntity);
     }
 }

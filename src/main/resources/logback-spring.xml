@@ -1,6 +1,6 @@
 <configuration>
     <!-- Log file location -->
-    <property name="LOG_DIR" value="/app/logs"/>
+    <property name="LOG_DIR" value="./app/logs"/>
     <property name="LOG_FILE" value="${LOG_DIR}/api.logs.json"/>
 
     <!-- JSON encoder -->
