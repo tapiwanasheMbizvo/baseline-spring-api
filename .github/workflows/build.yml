@@ -7,7 +7,7 @@ on:
 env:
   AWS_REGION: af-south-1
   ECR_REPOSITORY: baseline-api
-  INFRA_REPO: tapiwanasheMbizvo/baseline-api-k8s-app.git
+  INFRA_REPO: https://github.com/tapiwanasheMbizvo/baseline-api-k8s-app.git
 
 permissions:
   id-token: write
@@ -64,7 +64,7 @@ jobs:
         with:
           repository: ${{ env.INFRA_REPO }}
           token: ${{ secrets.GITOPS_REPO_TOKEN }}
-          path: baseline-api-k8s-app
+          path: main
 
       - name: Update Helm values for all environments
         run: |
