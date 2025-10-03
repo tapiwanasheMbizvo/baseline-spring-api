@@ -7,6 +7,7 @@ on:
 env:
   AWS_REGION: af-south-1
   ECR_REPOSITORY: baseline-api
+  INFRA_REPO: https://github.com/tapiwanasheMbizvo/baseline-api-k8s-app.git
 
 permissions:
   id-token: write
@@ -57,3 +58,34 @@ jobs:
           docker push $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:latest
 
           echo "Image pushed: $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG"
+
+      - name: Checkout infra repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.INFRA_REPO }}
+          token: ${{ secrets.GITOPS_REPO_TOKEN }}
+          path: baseline-api-k8s-app
+
+      - name: Update Helm values for all environments
+        run: |
+          cd baseline-api-k8s-app/environments
+
+          for ENV in dev qa prod; do
+            echo "Updating image tag for $ENV"
+            yq e ".image.tag = \"${{ env.IMAGE_TAG }}\"" -i values-${ENV}.yaml
+          done
+
+      - name: Commit and push changes
+        run: |
+          cd baseline-api-k8s-app
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+
+          # Only commit if there are changes
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git add .
+            git commit -m "Update image tag to ${{ env.IMAGE_TAG }} for all environments"
+            git push
+          else
+            echo "No changes to commit."
+          fi
