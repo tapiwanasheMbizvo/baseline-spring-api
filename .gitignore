@@ -32,5 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 
-.env
+../../IdeaProjects/baseline-api-k8s-app/keys/.env
 /logs/*
+app/*
