@@ -1,4 +1,4 @@
-name: Build jar, Create docker image and push to ECR.
+name: Build JAR, Build Docker Image, Push to ECR, and Update Helm
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 env:
   AWS_REGION: af-south-1
   ECR_REPOSITORY: baseline-api
-  INFRA_REPO: https://github.com/tapiwanasheMbizvo/baseline-api-k8s-app.git
+  INFRA_REPO: tapiwanasheMbizvo/baseline-api-k8s-app
 
 permissions:
   id-token: write
@@ -38,33 +38,36 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build, tag, and push docker image
+        id: build-image
         run: |
           COMMIT_HASH=${GITHUB_SHA::7}
-          IMAGE_TAG=$COMMIT_HASH
+          echo "IMAGE_TAG=$COMMIT_HASH" >> $GITHUB_ENV
           ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
 
           echo "Building Docker image..."
-          docker build -t $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG \
+          docker build -t $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$COMMIT_HASH \
                        -t $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:latest .
 
           echo "Pushing to ECR..."
-          docker push $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG
+          docker push $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$COMMIT_HASH
           docker push $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:latest
 
-          echo "Image pushed: $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG"
+          echo "Image pushed: $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$COMMIT_HASH"
 
       - name: Checkout infra repo
         uses: actions/checkout@v4
         with:
           repository: ${{ env.INFRA_REPO }}
           token: ${{ secrets.GITOPS_REPO_TOKEN }}
-          path: main
+          path: baseline-api-k8s-app
+
+      - name: Install yq
+        run: sudo snap install yq
 
       - name: Update Helm values for all environments
         run: |
@@ -81,7 +84,6 @@ jobs:
           git config user.name "github-actions"
           git config user.email "actions@github.com"
 
-          # Only commit if there are changes
           if [[ -n "$(git status --porcelain)" ]]; then
             git add .
             git commit -m "Update image tag to ${{ env.IMAGE_TAG }} for all environments"
