@@ -63,6 +63,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: ${{ env.INFRA_REPO }}
+          ref: simple-spring-boot-api
           token: ${{ secrets.GITOPS_REPO_TOKEN }}
           path: baseline-api-k8s-app
 
@@ -71,12 +72,9 @@ jobs:
 
       - name: Update Helm values for all environments
         run: |
-          cd baseline-api-k8s-app/environments
-
-          for ENV in dev qa prod; do
-            echo "Updating image tag for $ENV"
-            yq e ".image.tag = \"${{ env.IMAGE_TAG }}\"" -i values-${ENV}.yaml
-          done
+          cd baseline-api-k8s-app
+          echo "Updating image tag"
+          yq e ".image.tag = \"${{ env.IMAGE_TAG }}\"" -i values.yaml
 
       - name: Commit and push changes
         run: |
