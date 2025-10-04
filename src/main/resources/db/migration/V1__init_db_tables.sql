@@ -1,5 +1,5 @@
 CREATE SEQUENCE characters_seq START WITH 1 INCREMENT BY 1;
-CREATE TABLE characters
+CREATE TABLE public.characters
 (
 
     id        BIGINT PRIMARY KEY DEFAULT nextval('characters_seq'),

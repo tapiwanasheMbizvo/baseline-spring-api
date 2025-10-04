@@ -20,7 +20,7 @@ public class HelloWorld {
         return  ApiResponse.<String>builder()
                 .data("hello world from api")
                 .status(HttpStatus.ACCEPTED)
-                .message("hello world from api running , let update this and redeploy....")
+                .message("Happy we returned a message.")
                 .timestamp(LocalDateTime.now())
                 .build();
     }
