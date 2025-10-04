@@ -18,9 +18,9 @@ public class HelloWorld {
     public ApiResponse<String> helloWorld() {
 
         return  ApiResponse.<String>builder()
-                .data("hello world from api")
+                .data("Sample Data")
                 .status(HttpStatus.ACCEPTED)
-                .message("Happy we returned a message.")
+                .message("Hello World!!")
                 .timestamp(LocalDateTime.now())
                 .build();
     }
