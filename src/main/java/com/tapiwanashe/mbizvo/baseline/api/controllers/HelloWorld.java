@@ -20,7 +20,7 @@ public class HelloWorld {
         return  ApiResponse.<String>builder()
                 .data("Sample Data")
                 .status(HttpStatus.ACCEPTED)
-                .message("Hello World!!")
+                .message("Hello World , welcome to ARGO deployments")
                 .timestamp(LocalDateTime.now())
                 .build();
     }
